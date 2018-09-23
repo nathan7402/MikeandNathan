@@ -291,6 +291,9 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
 
+        # ADDED 16:16 9-23-2018 for heuristic
+        self.gameStartState = startingGameState
+
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
@@ -389,13 +392,15 @@ def cornersHeuristic(state, problem):
             #x2, y2 = corner
             #assert not walls[x2][y2], 'corner is a wall: ' + str(corner)
             problem.goal = corner
+            #dist = mazeDistance(state[0], corner, problem.gameStartState)
+            # Euclidean Distance heuristic, 1/3
             dist = euclideanHeuristic(state[0], problem)
             if dist < closest_corner:
                 closest_corner = dist
 
-    # FIX WAY TO BOUND IT
+    # FIX WAY TO BOUND IT, JK Euclidean is already bounded
     #print(dist)
-    return dist/len(corners) # Default to trivial solution
+    return dist # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
