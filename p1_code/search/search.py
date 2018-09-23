@@ -127,7 +127,7 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     def assignPriority(item):
-        return problem.getCostofActions(item[1])
+        return problem.getCostOfActions(item[1])
 
     fringe = util.PriorityQueueWithFunction(assignPriority)
     return genericSearch(problem, fringe)
