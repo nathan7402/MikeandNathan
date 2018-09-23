@@ -280,6 +280,7 @@ class CornersProblem(search.SearchProblem):
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
         top, right = self.walls.height-2, self.walls.width-2
+        # NOTE: Use of tuple here is bizarre to me **********************************************
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
@@ -287,10 +288,7 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-
-        self.startState = gameState.getPacmanPosition()
-
-
+        # TUPLE NOT A LIST
 
     def getStartState(self):
         """
@@ -298,15 +296,14 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         # include position and bools
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (self.startingPosition, self.corners)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #print(state[1])
+        return len(state[1]) == 0
 
     def getSuccessors(self, state):
         """
@@ -323,20 +320,27 @@ class CornersProblem(search.SearchProblem):
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            # x,y = state[0]
-            # dx, dy = Actions.directionToVector(action)
-            # nextx, nexty = int(x + dx), int(y + dy)
-            # hitsWall = self.walls[nextx][nexty]
-            # if not hitsWall:
-            #     nextState = (nextx, nexty)
-            #     cost = self.costFn(nextState)
-            #     successors.append( (nextState, action, cost, [ , , , , ]))
-            util.raiseNotDefined()
-
-
-            "*** YOUR CODE HERE ***"
+            x,y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
+                 # Copy list of corners from current state
+                 # Avoid copying references
+                 nextCorners = list(state[1])
+                 # If the next state is a corner state, then remove it from the list
+                 # Use a while loop to avoid indexing out of range
+                 i = 0
+                 while i < len(nextCorners):
+                     if nextCorners[i] == (nextx, nexty):
+                         del nextCorners[i]
+                     else:
+                         i+=1
+                 # Convert nextCorners back to a tuple for the set of visited states
+                 successors.append((((nextx, nexty), tuple(nextCorners)), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
+        print(successors)
         return successors
 
     def getCostOfActions(self, actions):
@@ -463,6 +467,7 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
+    # problem.heuristicInfo['wallCount'] = problem.walls.count()
     "*** YOUR CODE HERE ***"
     return 0
 

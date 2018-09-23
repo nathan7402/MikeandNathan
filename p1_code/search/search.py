@@ -102,6 +102,7 @@ def genericSearch(problem, empty_fringe):
         # if node hasn't been visited
         # if node[0] is not a tuple just add it
         # else add node[0][0]
+        # NOTE: BECAUSE OF THIS WE HAVE TO USE TUPLE INSTEAD OF LIST, NEEDS TO BE HASHABLE
         if node[0] not in visited:
             # add to visited set
             visited.add(node[0])
@@ -142,7 +143,8 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     def assignPriority(item):
-        return item[2] + heuristic(item[0], problem)
+        # NOTE CHANGE
+        return problem.getCostOfActions(item[1]) + heuristic(item[0], problem)
 
     fringe = util.PriorityQueueWithFunction(assignPriority)
     return genericSearch(problem, fringe)
