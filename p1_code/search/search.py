@@ -76,10 +76,10 @@ def tinyMazeSearch(problem):
 def genericSearch(problem, empty_fringe):
 
     # intitalize fringe
-    # NOTE: fringe stored as tuples of xy state, path (direction list), & cost
+    # NOTE: fringe stored as tuples of state & path (direction list)
     fringe = empty_fringe
     start = problem.getStartState()
-    fringe.push((start, [], 0))
+    fringe.push((start, []))
 
     # initialize empty set of visited nodes
     visited = set()
@@ -112,8 +112,8 @@ def genericSearch(problem, empty_fringe):
                 old_dirs = node[1][:]
                 old_dirs.append(item[1])
 
-                # add state, path, & updated cost as new element in fringe
-                fringe.push((item[0], old_dirs, node[2] + item[2]))
+                # add state & updated path as new element in fringe
+                fringe.push((item[0], old_dirs))
 
 def depthFirstSearch(problem):
     # generic search using LIFO Stack as fringe
@@ -127,7 +127,7 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     def assignPriority(item):
-        return item[2]
+        return problem.getCostofActions(item[1])
 
     fringe = util.PriorityQueueWithFunction(assignPriority)
     return genericSearch(problem, fringe)
