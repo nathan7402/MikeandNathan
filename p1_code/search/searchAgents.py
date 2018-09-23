@@ -280,7 +280,7 @@ class CornersProblem(search.SearchProblem):
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
         top, right = self.walls.height-2, self.walls.width-2
-        # NOTE: Use of tuple here is bizarre to me **********************************************
+        # Use tuple as hashable type for visited set
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
@@ -288,14 +288,14 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        # TUPLE NOT A LIST
 
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        # include position and bools
+        # include position and tuple of all unvisited corners
+        # QUESTION NATHAN. SHOULS WE CHECK TO SEE IF THE START POSITION IS A CORNER HERE
         return (self.startingPosition, self.corners)
 
     def isGoalState(self, state):
@@ -340,7 +340,6 @@ class CornersProblem(search.SearchProblem):
                  successors.append((((nextx, nexty), tuple(nextCorners)), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
-        print(successors)
         return successors
 
     def getCostOfActions(self, actions):
