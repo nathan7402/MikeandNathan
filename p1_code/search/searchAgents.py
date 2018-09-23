@@ -254,6 +254,8 @@ def manhattanHeuristic(position, problem, info={}):
     "The Manhattan distance heuristic for a PositionSearchProblem"
     xy1 = position
     xy2 = problem.goal
+    #print(xy2)
+    #print(xy1)
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
 
 def euclideanHeuristic(position, problem, info={}):
@@ -372,8 +374,28 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # Initial value for mindistance
+    if len(state[1]) == 0:
+        return 0
+    # NOTE: COULD OPTIMAL HEURISTIC BE MAZEDISTANCE AT BOTTOM OF PAGE WE SHOULD USE A FUNCTIOn
+    # ON THIS PAGEEEEEEEEEEEEEEEEEEEEEEEEeee
+    else:
+        # IMPRECISE
+        closest_corner = 99999999
+        #x1, y1 = state[0]
+        #assert not walls[x1][y1], 'current state is a wall: ' + str(state[0])
+        for corner in state[1]:
+            #print(corner)
+            #x2, y2 = corner
+            #assert not walls[x2][y2], 'corner is a wall: ' + str(corner)
+            problem.goal = corner
+            dist = euclideanHeuristic(state[0], problem)
+            if dist < closest_corner:
+                closest_corner = dist
+
+    # FIX WAY TO BOUND IT
+    #print(dist)
+    return dist/len(corners) # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
