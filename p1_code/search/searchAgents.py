@@ -392,13 +392,16 @@ def cornersHeuristic(state, problem):
             #x2, y2 = corner
             #assert not walls[x2][y2], 'corner is a wall: ' + str(corner)
             problem.goal = corner
+            # Maze Distance -- trivial
             #dist = mazeDistance(state[0], corner, problem.gameStartState)
-            # Euclidean Distance heuristic, 1/3
-            dist = euclideanHeuristic(state[0], problem)
+            # Euclidean Distance heuristic, 2/3
+            # dist = euclideanHeuristic(state[0], problem)
+            # Manhattan Distance heuristic, 2/3
+            dist = manhattanHeuristic(state[0], problem)
             if dist < closest_corner:
                 closest_corner = dist
 
-    # FIX WAY TO BOUND IT, JK Euclidean is already bounded
+    # FIX WAY TO BOUND IT, JK Euclidean is already bounded correctly
     #print(dist)
     return dist # Default to trivial solution
 
