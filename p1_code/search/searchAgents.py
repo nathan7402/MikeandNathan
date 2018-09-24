@@ -394,10 +394,6 @@ def cornersHeuristic(state, problem):
             problem.goal = corner
             # Maze Distance -- 3/3, but really slow, trivial sometimes?
             dist = mazeDistance(state[0], corner, problem.gameStartState)
-            # Euclidean Distance heuristic, 2/3
-            #dist = euclideanHeuristic(state[0], problem)
-            # Manhattan Distance heuristic, 2/3
-            #dist = manhattanHeuristic(state[0], problem)
             if dist < closest_corner:
                 closest_corner = dist
 
@@ -529,8 +525,7 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.bfs(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -564,9 +559,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
-
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.food[x][y]
 
 def mazeDistance(point1, point2, gameState):
     """
