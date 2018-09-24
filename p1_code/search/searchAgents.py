@@ -494,7 +494,7 @@ def foodHeuristic(state, problem):
 
     # generic function to find Manhattan distance between any two points
     def manhattanFood(pos1, pos2):
-        return (abs(pos2[0]-pos1[0]) + abs(pos2[1]-pos1[1]))
+        return abs(pos2[0]-pos1[0]) + abs(pos2[1]-pos1[1])
 
     position, foodGrid = state
 

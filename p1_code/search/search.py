@@ -91,16 +91,11 @@ def genericSearch(problem, empty_fringe):
 
         # expand next node in fringe
         node = fringe.pop()
-        # define a position variable?
-        # if node[0] is tuple tuple then pos = node[0][0]
-        # else pos = node[0]
 
         # if node contains goal state, return directions to that solution
         if problem.isGoalState(node[0]):
             return node[1]
 
-        # if node hasn't been visited
-        # NOTE: Because visited is a set, you can only pass in tuples, not lists
         if node[0] not in visited:
             # add to visited set
             visited.add(node[0])
@@ -141,7 +136,6 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     def assignPriority(item):
-        # Use getCostOfActions function
         return problem.getCostOfActions(item[1]) + heuristic(item[0], problem)
 
     fringe = util.PriorityQueueWithFunction(assignPriority)
