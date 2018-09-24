@@ -291,7 +291,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
 
-        # ADDED 16:16 9-23-2018 for heuristic
+        # Store the starting game state for Maze Distance calls
         self.gameStartState = startingGameState
 
     def getStartState(self):
@@ -299,15 +299,13 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        # include position and tuple of all unvisited corners
-        # QUESTION NATHAN. SHOULS WE CHECK TO SEE IF THE START POSITION IS A CORNER HERE
         return (self.startingPosition, self.corners)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        #print(state[1])
+
         return len(state[1]) == 0
 
     def getSuccessors(self, state):
@@ -330,8 +328,7 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
             if not hitsWall:
-                 # Copy list of corners from current state
-                 # Avoid copying references
+                 # Copy list of corners from current state as current heuri
                  nextCorners = list(state[1])
                  # If the next state is a corner state, then remove it from the list
                  # Use a while loop to avoid indexing out of range
@@ -377,29 +374,28 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    # Initial value for mindistance
+    # If there are now corners left to be searched for return 0
     if len(state[1]) == 0:
         return 0
-    # NOTE: COULD OPTIMAL HEURISTIC BE MAZEDISTANCE AT BOTTOM OF PAGE WE SHOULD USE A FUNCTIOn
-    # ON THIS PAGEEEEEEEEEEEEEEEEEEEEEEEEeee
+
     else:
-        # IMPRECISE
+        # Initial value for heuristic
         closest_corner = 99999999
-        #x1, y1 = state[0]
-        #assert not walls[x1][y1], 'current state is a wall: ' + str(state[0])
+
+        # Iterate through all of the corners
         for corner in state[1]:
-            #print(corner)
-            #x2, y2 = corner
-            #assert not walls[x2][y2], 'corner is a wall: ' + str(corner)
+            # Store the goal state to be the corner
             problem.goal = corner
-            # Maze Distance -- 3/3, but really slow, trivial sometimes?
+            # Determine the Maze Distance to the corner
             dist = mazeDistance(state[0], corner, problem.gameStartState)
+
+            # If the distance is shorter than to all other corners, store this corner
+            # as the heuristic value
             if dist < closest_corner:
                 closest_corner = dist
 
-    # FIX WAY TO BOUND IT, JK Euclidean is already bounded correctly
-    #print(dist)
-    return dist # Default to trivial solution
+    # Return the minimum maze distance as the heuristic
+    return dist
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -492,13 +488,22 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
-    # problem.heuristicInfo['wallCount'] = problem.walls.count()
-    foodlist = foodGrid.asList()
+    def manhattanFood(pos1, pos2):
+        x1, y1 = pos1
+        x2, y2 = pos2
+        return (abs(x2-x1) + abs(y1-y2))
 
-    "*** YOUR CODE HERE ***"
-    #mazeDistance(,,state)
-    return 0
+    position, foodGrid = state
+    food_list = foodGrid.asList()
+
+    distances = []
+    for food in food_list:
+        distances.append(mazeDistance(position, food, problem.startingGameState))
+
+    if len(distances) == 0:
+        return 0
+    else:
+        return max(distances)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
