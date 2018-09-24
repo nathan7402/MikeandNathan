@@ -491,25 +491,26 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+
+    # generic function to find Manhattan distance between any two points
     def manhattanFood(pos1, pos2):
-        x1, y1 = pos1
-        x2, y2 = pos2
-        return (abs(x2-x1) + abs(y1-y2))
+        return (abs(pos2[0]-pos1[0]) + abs(pos2[1]-pos1[1]))
 
     position, foodGrid = state
-    # problem.heuristicInfo['wallCount'] = problem.walls.count()
+
+    #get list of positions of all food particles
     food_list = foodGrid.asList()
 
+    # make list of all distances through maze to food
     distances = []
     for food in food_list:
         distances.append(mazeDistance(position, food, problem.startingGameState))
 
+    # return maximum distance, or 0 if list is empty
     if len(distances) == 0:
         return 0
     else:
         return max(distances)
-
-
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -539,6 +540,7 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
+        # solve AnyFoodSearchProblem using BFS to find shortest path
         return search.bfs(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -573,6 +575,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
+        # if current position is food, it is goal state
         return self.food[x][y]
 
 def mazeDistance(point1, point2, gameState):
