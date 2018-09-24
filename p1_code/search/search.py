@@ -75,8 +75,7 @@ def tinyMazeSearch(problem):
 # generic search function based on graph search pseudocode from lecture
 def genericSearch(problem, empty_fringe):
 
-    # intitalize fringe
-    # NOTE: fringe stored as tuples of state & path (direction list)
+    # intitalize fringe with tuple of state & path (direction list)
     fringe = empty_fringe
     start = problem.getStartState()
     fringe.push((start, []))
@@ -86,8 +85,7 @@ def genericSearch(problem, empty_fringe):
 
     while True:
         if fringe.isEmpty():
-            print "Empty fringe!"
-            util.raiseNotDefined()
+            raise Exception, "Empty fringe!"
 
         # expand next node in fringe
         node = fringe.pop()
