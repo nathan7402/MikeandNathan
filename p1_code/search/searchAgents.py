@@ -471,6 +471,7 @@ def foodHeuristic(state, problem):
     up with an admissible heuristic; almost all admissible heuristics will be
     consistent as well.
 
+
     If using A* ever finds a solution that is worse uniform cost search finds,
     your heuristic is *not* consistent, and probably not admissible!  On the
     other hand, inadmissible or inconsistent heuristics may find optimal
@@ -493,8 +494,10 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     # problem.heuristicInfo['wallCount'] = problem.walls.count()
+    foodlist = foodGrid.asList()
+
     "*** YOUR CODE HERE ***"
-    mazeDistance(,,state)
+    #mazeDistance(,,state)
     return 0
 
 class ClosestDotSearchAgent(SearchAgent):
