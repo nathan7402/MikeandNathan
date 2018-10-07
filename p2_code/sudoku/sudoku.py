@@ -5,6 +5,8 @@ import sys
 import random
 import argparse
 
+from typing import Dict, Any
+
 BOX = 1
 ROW = 2
 COL = 3
@@ -28,6 +30,8 @@ def crossOff(values, nums):
 
 
 class Sudoku:
+    factorRemaining = None  # type: Dict[Any, Any]
+
     def __init__(self, board, lastMoves=[], isFirstLocal=False):
         self.board = board
 
@@ -79,6 +83,7 @@ class Sudoku:
         return Sudoku(newBoard, [(row, col)])
 
     # PART 1
+    @property
     def firstEpsilonVariable(self):
         """
         IMPLEMENT FOR PART 1
@@ -87,10 +92,14 @@ class Sudoku:
 
         NOTE: for the sake of the autograder, please search for the first
         unassigned variable column-wise, then row-wise:
-        for r in row:
-            for c in col:
         """
-        raise NotImplementedError()
+        for r in range(len(self.board)):
+            for c in range(len(self.row(0))):
+                if self.board[r][c] == 0:
+                    return r, c
+
+        # If no epsilon
+        return None
 
     def complete(self):
         """
@@ -99,7 +108,10 @@ class Sudoku:
 
         i.e. if there are no more first epsilon variables
         """
-        raise NotImplementedError()
+        if self.firstEpsilonVariable == None:
+            return True
+        else:
+            return False
 
     def variableDomain(self, r, c):
         """
@@ -110,10 +122,23 @@ class Sudoku:
         i.e. return a list of the possible number assignments to this variable
         without breaking consistency for its row, column, or box.
         """
-        raise NotImplementedError()
+        # get box factor
+        box_factor = self.box_id(r, c)
+
+        # WRONG
+        # Cross off overlap
+        # DOing this wrong, row, number
+        domain = [1,2,3,4,5,6,7,8,9]
+        crossOff(domain, self.row(r))
+        crossOff(domain, self.col(c))
+        crossOff(domain, self.box(box_factor))
+
+        # Return domain
+        return filter(None, domain)
 
     # PART 2
     def updateFactor(self, factor_type, i):
+
         """
         IMPLEMENT FOR PART 2
         Update the values remaining for a factor.
@@ -161,7 +186,7 @@ class Sudoku:
         if args.mostconstrained:
             return self.mostConstrainedVariable()
         else:
-            return self.firstEpsilonVariable()
+            return self.firstEpsilonVariable
 
     # PART 3
     def getSuccessors(self):
