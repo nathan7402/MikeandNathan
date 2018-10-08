@@ -169,9 +169,9 @@ class Sudoku:
         There is one factor for each row, column, and box.
         """
         for i in range(9):
-            self.updateFactor(box, i)
-            self.updateFactor(row, i)
-            self.updateFactor(col, i)
+            self.updateFactor(BOX, i)
+            self.updateFactor(ROW, i)
+            self.updateFactor(COL, i)
 
 
     def updateVariableFactors(self, variable):
@@ -179,7 +179,10 @@ class Sudoku:
         IMPLEMENT FOR PART 2
         Update all the factors impacting a variable (neighbors in factor graph).
         """
-        raise NotImplementedError()
+        r, c = variable
+        self.updateFactor(ROW, r)
+        self.updateFactor(COL, c)
+        self.updateFactor(BOX, self.box_id(r, c))
 
     # CSP SEARCH CODE
     def nextVariable(self):
