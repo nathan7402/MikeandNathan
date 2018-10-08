@@ -242,7 +242,12 @@ class Sudoku:
         i.e. make sure that for every unassigned element in the board, that
         element has a non-trivial domain (its domain isn't empty)
         """
-        raise NotImplementedError()
+        for r in range(9):
+            for c in range(9):
+                if self.board[r][c] == 0 and self.variableDomain(r, c) == []:
+                    return False
+
+        return True
 
     # LOCAL SEARCH CODE
     # Fixed variables cannot be changed by the player.
@@ -291,8 +296,17 @@ class Sudoku:
         NOTE: Please, please, please use random.shuffle() -- will help us out
               on the autograder side!
         """
-        raise NotImplementedError()
-        # self.updateAllFactors() # to call at end of function
+        domain = [1,2,3,4,5,6,7,8,9]
+
+        newBoard = []
+
+        for r in range(9):
+            random.shuffle(domain)
+            newBoard.append(list(domain))
+
+        print(newBoard)
+        self.board = newBoard
+        self.updateAllFactors()
 
     # PART 6
     def randomSwap(self):
