@@ -11,6 +11,10 @@ COL = 3
 
 random.seed(18)  # IMPORTANT: DO NOT REMOVE!
 
+# NOTES:
+#   sudoku represented as a list of lists
+#   box numbers start at top left (0) and go to bottom right (8)
+
 
 def crossOff(values, nums):
     """
@@ -90,7 +94,13 @@ class Sudoku:
         for r in row:
             for c in col:
         """
-        raise NotImplementedError()
+
+        for r in range(9):
+            for c in range(9):
+                if self.board[r][c] == 0:
+                    return (r,c)
+
+        return None
 
     def complete(self):
         """
@@ -99,7 +109,7 @@ class Sudoku:
 
         i.e. if there are no more first epsilon variables
         """
-        raise NotImplementedError()
+        return self.firstEpsilonVariable() == 0
 
     def variableDomain(self, r, c):
         """
@@ -315,7 +325,7 @@ class Sudoku:
                     td_style = "border-right: #666699 solid 2px;"
 
                 out +=  "<td class='outtop' style='%s'> %s </td>"%(td_style , cols[i] if cols[i] else "   ")
-            out += "<td class='outtop'></td>" * 9 +  "</tr>" 
+            out += "<td class='outtop'></td>" * 9 +  "</tr>"
 
         for i in range(9):
             style = "border: #AAAAAA 1px"
