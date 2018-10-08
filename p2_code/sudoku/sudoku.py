@@ -123,7 +123,12 @@ class Sudoku:
         """
         return anything in 1,2,3,4,5,6,7,8,9 not in row, col, or box associated with (r.c)
         """
-        raise NotImplementedError()
+        d = []
+
+        for i in range(1, 10):
+            if not ((i in self.row(r)) or (i in self.col(c)) or (i in self.box(self.box_id(r,c)))):
+                d.append(i)
+        return d
 
     # PART 2
     def updateFactor(self, factor_type, i):
