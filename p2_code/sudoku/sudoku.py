@@ -305,6 +305,7 @@ class Sudoku:
 
         NOTE: DO NOT swap any of the variables already set: fixedVariables
         """
+
         raise NotImplementedError()
 
     # PART 7
