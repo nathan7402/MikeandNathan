@@ -290,7 +290,6 @@ class Sudoku:
             random.shuffle(domain)
             newBoard.append(list(domain))
 
-        print(newBoard)
         self.board = newBoard
         self.updateAllFactors()
 
@@ -306,7 +305,27 @@ class Sudoku:
         NOTE: DO NOT swap any of the variables already set: fixedVariables
         """
 
-        raise NotImplementedError()
+        rows = [0,1,2,3,4,5,6,7,8]
+
+        random.shuffle(rows)
+
+        while len(rows) > 0:
+            row = rows.pop()
+            nonFixed = []
+            for c in range(9):
+                if not (row, c) in self.fixedVariables.keys():
+                    nonFixed.append(c)
+            print(nonFixed)
+
+            if len(nonFixed) >= 2:
+                random.shuffle(nonFixed)
+                c1 = nonFixed.pop()
+                c2 = nonFixed.pop()
+                return (row, c1), (row, c2)
+
+        if len(rows) == 0:
+            raise AttributeError()
+
 
     # PART 7
     def gradientDescent(self, variable1, variable2):
@@ -314,7 +333,12 @@ class Sudoku:
         IMPLEMENT FOR PART 7
         Decide if we should swap the values of variable1 and variable2.
         """
-        raise NotImplementedError()
+        currentConflicts = self.numConflicts()
+        potentialConflicts = self.modifySwap(variable1, variable2).numConflicts()
+
+        if potentialConflicts >= currentConflicts:
+            # If unhelpful, move back to original position
+            self.modifySwap(variable1, variable2)
 
     ### IGNORE - PRINTING CODE
 
