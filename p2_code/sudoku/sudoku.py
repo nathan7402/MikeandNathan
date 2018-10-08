@@ -207,8 +207,18 @@ class Sudoku:
 
         Hint: setVariable and variableDomain will be useful
         """
-        # nextVariable =  self.nextVariable()
-        raise NotImplementedError()
+        nextVariable = self.nextVariable()
+        r, c = nextVariable
+
+        domain_list = self.variableDomain(r, c)
+
+        frontier = []
+
+        for i, num in enumerate(domain_list):
+            frontier.append(self.setVariable(r, c, num))
+            frontier[i].updateVariableFactors(nextVariable)
+
+        return frontier
 
     def getAllSuccessors(self):
         if not args.forward:
