@@ -123,13 +123,12 @@ class MinimaxAgent(MultiAgentSearchAgent):
             agentIndex=0 means Pacman, ghosts are >= 1
 
           gameState.generateSuccessor(agentIndex, action):
+          gameState.generateSuccessor(agentIndex, action):
             Returns the successor game state after an agent takes an action
 
           gameState.getNumAgents():
             Returns the total number of agents in the game
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
