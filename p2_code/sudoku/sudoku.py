@@ -95,8 +95,8 @@ class Sudoku:
             for c in col:
         """
 
-        for r in range(9):
-            for c in range(9):
+        for c in range(9):
+            for r in range(9):
                 if self.board[r][c] == 0:
                     return (r,c)
 
@@ -109,7 +109,7 @@ class Sudoku:
 
         i.e. if there are no more first epsilon variables
         """
-        return self.firstEpsilonVariable() == 0
+        return (self.firstEpsilonVariable() == None)
 
     def variableDomain(self, r, c):
         """
@@ -119,6 +119,9 @@ class Sudoku:
 
         i.e. return a list of the possible number assignments to this variable
         without breaking consistency for its row, column, or box.
+        """
+        """
+        return anything in 1,2,3,4,5,6,7,8,9 not in row, col, or box associated with (r.c)
         """
         raise NotImplementedError()
 
