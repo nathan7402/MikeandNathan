@@ -32,6 +32,8 @@ def crossOff(values, nums):
 
 
 class Sudoku:
+    factorRemaining = None  # type: Dict[Any, Any]
+
     def __init__(self, board, lastMoves=[], isFirstLocal=False):
         self.board = board
 
@@ -83,6 +85,7 @@ class Sudoku:
         return Sudoku(newBoard, [(row, col)])
 
     # PART 1
+    @property
     def firstEpsilonVariable(self):
         """
         IMPLEMENT FOR PART 1
@@ -91,15 +94,15 @@ class Sudoku:
 
         NOTE: for the sake of the autograder, please search for the first
         unassigned variable column-wise, then row-wise:
-        for r in row:
-            for c in col:
         """
 
-        for c in range(9):
-            for r in range(9):
+        for r in range(9):
+            for c in range(9):
+                #print(r, c)
                 if self.board[r][c] == 0:
-                    return (r,c)
+                    return (r, c)
 
+        # If no epsilon
         return None
 
     def complete(self):
@@ -120,18 +123,24 @@ class Sudoku:
         i.e. return a list of the possible number assignments to this variable
         without breaking consistency for its row, column, or box.
         """
-        """
-        return anything in 1,2,3,4,5,6,7,8,9 not in row, col, or box associated with (r.c)
-        """
-        d = []
 
-        for i in range(1, 10):
-            if not ((i in self.row(r)) or (i in self.col(c)) or (i in self.box(self.box_id(r,c)))):
-                d.append(i)
-        return d
+        # get box factor
+        box_factor = self.box_id(r, c)
+
+        # WRONG
+        # Cross off overlap
+        # DOing this wrong, row, number
+        domain = [1,2,3,4,5,6,7,8,9]
+        crossOff(domain, self.row(r))
+        crossOff(domain, self.col(c))
+        crossOff(domain, self.box(box_factor))
+
+        # Return domain
+        return filter(None, domain)
 
     # PART 2
     def updateFactor(self, factor_type, i):
+
         """
         IMPLEMENT FOR PART 2
         Update the values remaining for a factor.
@@ -145,16 +154,16 @@ class Sudoku:
 
         Hint: crossOff may be useful here
         """
-        raise NotImplementedError()
-        # values = []
-        # if factor_type == BOX:
+        values = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        if factor_type == BOX:
+            assignedValues = self.box(i)
+        if factor_type == ROW:
+            assignedValues = self.row(i)
+        if factor_type == COL:
+            assignedValues = self.col(i)
 
-        # if factor_type == ROW:
-
-        # if factor_type == COL:
-
-        # self.factorNumConflicts[factor_type, i] =
-        # self.factorRemaining[factor_type, i] =
+        self.factorNumConflicts[factor_type, i] = crossOff(values, assignedValues)
+        self.factorRemaining[factor_type, i] = filter(None, values)
 
     def updateAllFactors(self):
         """
@@ -162,7 +171,11 @@ class Sudoku:
         Update the values remaining for all factors.
         There is one factor for each row, column, and box.
         """
-        raise NotImplementedError()
+        for i in range(9):
+            self.updateFactor(box, i)
+            self.updateFactor(row, i)
+            self.updateFactor(col, i)
+
 
     def updateVariableFactors(self, variable):
         """
@@ -179,7 +192,7 @@ class Sudoku:
         if args.mostconstrained:
             return self.mostConstrainedVariable()
         else:
-            return self.firstEpsilonVariable()
+            return self.firstEpsilonVariable
 
     # PART 3
     def getSuccessors(self):
