@@ -171,9 +171,9 @@ class Sudoku:
         There is one factor for each row, column, and box.
         """
         for i in range(9):
-            self.updateFactor(BOX, i)
-            self.updateFactor(ROW, i)
-            self.updateFactor(COL, i)
+            self.updateFactor(box, i)
+            self.updateFactor(row, i)
+            self.updateFactor(col, i)
 
 
     def updateVariableFactors(self, variable):
@@ -181,10 +181,7 @@ class Sudoku:
         IMPLEMENT FOR PART 2
         Update all the factors impacting a variable (neighbors in factor graph).
         """
-        r, c = variable
-        self.updateFactor(ROW, r)
-        self.updateFactor(COL, c)
-        self.updateFactor(BOX, self.box_id(r, c))
+        raise NotImplementedError()
 
     # CSP SEARCH CODE
     def nextVariable(self):
@@ -194,7 +191,7 @@ class Sudoku:
         if args.mostconstrained:
             return self.mostConstrainedVariable()
         else:
-            return self.firstEpsilonVariable()
+            return self.firstEpsilonVariable
 
     # PART 3
     def getSuccessors(self):
@@ -210,19 +207,8 @@ class Sudoku:
 
         Hint: setVariable and variableDomain will be useful
         """
-        nextVariable = self.nextVariable()
-        r, c = nextVariable
-
-        domain_list = self.variableDomain(r, c)
-
-        frontier = []
-
-        for i, num in enumerate(domain_list):
-            frontier.append(self.setVariable(r, c, num))
-            frontier[i].updateVariableFactors(nextVariable)
-
-        return frontier
-
+        # nextVariable =  self.nextVariable()
+        raise NotImplementedError()
 
     def getAllSuccessors(self):
         if not args.forward:
