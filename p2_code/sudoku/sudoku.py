@@ -5,8 +5,6 @@ import sys
 import random
 import argparse
 
-from typing import Dict, Any
-
 BOX = 1
 ROW = 2
 COL = 3
@@ -93,10 +91,11 @@ class Sudoku:
         NOTE: for the sake of the autograder, please search for the first
         unassigned variable column-wise, then row-wise:
         """
-        for r in range(len(self.board)):
-            for c in range(len(self.row(0))):
+        for r in range(9):
+            for c in range(9):
+                #print(r, c)
                 if self.board[r][c] == 0:
-                    return r, c
+                    return (r, c)
 
         # If no epsilon
         return None
@@ -152,16 +151,16 @@ class Sudoku:
 
         Hint: crossOff may be useful here
         """
-        raise NotImplementedError()
-        # values = []
-        # if factor_type == BOX:
+        values = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        if factor_type == BOX:
+            assignedValues = self.box(i)
+        if factor_type == ROW:
+            assignedValues = self.row(i)
+        if factor_type == COL:
+            assignedValues = self.col(i)
 
-        # if factor_type == ROW:
-
-        # if factor_type == COL:
-
-        # self.factorNumConflicts[factor_type, i] =
-        # self.factorRemaining[factor_type, i] =
+        self.factorNumConflicts[factor_type, i] = crossOff(values, assignedValues)
+        self.factorRemaining[factor_type, i] = filter(None, values)
 
     def updateAllFactors(self):
         """
@@ -169,7 +168,11 @@ class Sudoku:
         Update the values remaining for all factors.
         There is one factor for each row, column, and box.
         """
-        raise NotImplementedError()
+        for i in range(9):
+            self.updateFactor(box, i)
+            self.updateFactor(row, i)
+            self.updateFactor(col, i)
+
 
     def updateVariableFactors(self, variable):
         """
