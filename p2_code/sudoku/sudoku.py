@@ -85,7 +85,6 @@ class Sudoku:
         return Sudoku(newBoard, [(row, col)])
 
     # PART 1
-    @property
     def firstEpsilonVariable(self):
         """
         IMPLEMENT FOR PART 1
