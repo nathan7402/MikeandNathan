@@ -295,16 +295,33 @@ class Sudoku:
         NOTE: Please, please, please use random.shuffle() -- will help us out
               on the autograder side!
         """
-        domain = [1,2,3,4,5,6,7,8,9]
-
-        newBoard = []
-
+        #print(self.board)
         for r in range(9):
-            random.shuffle(domain)
-            newBoard.append(list(domain))
+            domain = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            fixed = []
+            non_fixed_locations = []
+            for c in range(9):
+                if (r, c) in self.fixedVariables.keys():
+                    fixed.append(self.board[r][c])
+                else:
+                    non_fixed_locations.append(c)
 
-        self.board = newBoard
+            #print "Fixed values: " + str(fixed)
+            #print "Before cross off: " + str(domain)
+            crossOff(domain, fixed)
+            #print "Crossed off: " + str(domain)
+            nonfixed_domain = filter(None, domain)
+            random.shuffle(nonfixed_domain)
+            #print "Nonfixed domain: " + str(nonfixed_domain)
+
+            for c in non_fixed_locations:
+                self.board[r][c] = nonfixed_domain.pop()
+
+            #print
+
         self.updateAllFactors()
+        #print "Random restart complete"
+        #print self.board
 
     # PART 6
     def randomSwap(self):
@@ -328,7 +345,6 @@ class Sudoku:
             for c in range(9):
                 if not (row, c) in self.fixedVariables.keys():
                     nonFixed.append(c)
-            print(nonFixed)
 
             if len(nonFixed) >= 2:
                 random.shuffle(nonFixed)
@@ -347,11 +363,16 @@ class Sudoku:
         Decide if we should swap the values of variable1 and variable2.
         """
         currentConflicts = self.numConflicts()
-        potentialConflicts = self.modifySwap(variable1, variable2).numConflicts()
+        # Potential conflicts
+        self.modifySwap(variable1, variable2)
+        potentialConflicts = self.numConflicts()
+        val = random.random()
 
-        if potentialConflicts >= currentConflicts:
+        if potentialConflicts > currentConflicts and val > .001:
             # If unhelpful, move back to original position
             self.modifySwap(variable1, variable2)
+        # else:
+        #     print(potentialConflicts)
 
     ### IGNORE - PRINTING CODE
 
