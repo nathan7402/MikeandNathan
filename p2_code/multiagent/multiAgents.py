@@ -257,7 +257,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
                 else:
                     #Terminal
-                     return scoreEvaluationFunction(state)
+                    return scoreEvaluationFunction(state)
 
         # for all the moves possible check values pick max
         val = -999999
@@ -266,9 +266,9 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         if len(legal_actions) > 0:
             for i, action in enumerate(legal_actions):
-                x = value(gameState.generateSuccessor(0, action), 1, -999999, 999999)
-                if x > val:
-                      val = x
+                action_val = value(gameState.generateSuccessor(0, action), 1, val, 999999)
+                if action_val > val:
+                      val = action_val
                       val_index = i
                 #print "current action: " + str(legal_actions[i])
                 #print "current value: " + str(value(gameState.generateSuccessor(0, action), 1))
