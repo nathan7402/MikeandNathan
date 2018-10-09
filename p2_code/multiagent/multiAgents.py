@@ -235,7 +235,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 v = -999999
                 if len(state.getLegalActions(agent_num)) > 0:
                     for action in state.getLegalActions(agent_num):
-                        v = max(v, value(state.generateSuccessor(agent_num, action), moves_made + 1,a, B))
+                        v = max(v, value(state.generateSuccessor(agent_num, action), moves_made + 1, a, B))
                         if v > B:
                             return v
                         a = max(a, v)
