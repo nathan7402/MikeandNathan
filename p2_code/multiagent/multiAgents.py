@@ -266,8 +266,9 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         if len(legal_actions) > 0:
             for i, action in enumerate(legal_actions):
-                if value(gameState.generateSuccessor(0, action), 1, -999999, 999999) > val:
-                      val = value(gameState.generateSuccessor(0, action), 1, -999999, 999999)
+                x = value(gameState.generateSuccessor(0, action), 1, -999999, 999999)
+                if x > val:
+                      val = x
                       val_index = i
                 #print "current action: " + str(legal_actions[i])
                 #print "current value: " + str(value(gameState.generateSuccessor(0, action), 1))
