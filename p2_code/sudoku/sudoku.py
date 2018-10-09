@@ -11,10 +11,7 @@ COL = 3
 
 random.seed(18)  # IMPORTANT: DO NOT REMOVE!
 
-# NOTES:
-#   sudoku represented as a list of lists
-#   box numbers start at top left (0) and go to bottom right (8)
-
+# MIKE KOLOR AND NATHAN WILLIAMS COLLABORATED ON THIS PROBLEM SET
 
 def crossOff(values, nums):
     """
@@ -97,7 +94,6 @@ class Sudoku:
 
         for r in range(9):
             for c in range(9):
-                #print(r, c)
                 if self.board[r][c] == 0:
                     return (r, c)
 
@@ -295,7 +291,6 @@ class Sudoku:
         NOTE: Please, please, please use random.shuffle() -- will help us out
               on the autograder side!
         """
-        #print(self.board)
         for r in range(9):
             domain = [1, 2, 3, 4, 5, 6, 7, 8, 9]
             fixed = []
@@ -306,22 +301,15 @@ class Sudoku:
                 else:
                     non_fixed_locations.append(c)
 
-            #print "Fixed values: " + str(fixed)
-            #print "Before cross off: " + str(domain)
             crossOff(domain, fixed)
-            #print "Crossed off: " + str(domain)
             nonfixed_domain = filter(None, domain)
             random.shuffle(nonfixed_domain)
-            #print "Nonfixed domain: " + str(nonfixed_domain)
 
             for c in non_fixed_locations:
                 self.board[r][c] = nonfixed_domain.pop()
 
-            #print
 
         self.updateAllFactors()
-        #print "Random restart complete"
-        #print self.board
 
     # PART 6
     def randomSwap(self):

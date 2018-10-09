@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -129,6 +129,86 @@ class MinimaxAgent(MultiAgentSearchAgent):
           gameState.getNumAgents():
             Returns the total number of agents in the game
         """
+        # number of agents
+        n = gameState.getNumAgents()
+        max_moves = n * self.depth
+
+        def value(state, moves_made):
+            # terminal layer
+            if moves_made == max_moves:
+                return scoreEvaluationFunction(state)
+
+            agent_num = moves_made % n
+
+            # max layer (i.e. agent number 0)
+            """if agent_num == 0:
+                v = -999999
+                v_action = 9999 # SENTINEL
+
+                if len(state.getLegalActions(agent_num)) > 0:
+                    for action in state.getLegalActions(agent_num):
+                        if v < self.evaluationFunction(state.generateSuccessor(agent_num, action)):
+                            v = self.evaluationFunction(state.generateSuccessor(agent_num, action))
+                            v_action = action
+
+                    #print("pacman")
+                    #print(action)
+                    return value(state.generateSuccessor(agent_num, v_action), moves_made+1)
+                # max layer (i.e. agent number 0)"""
+            if agent_num == 0:
+                v = -999999
+                if len(state.getLegalActions(agent_num)) > 0:
+                    for action in state.getLegalActions(agent_num):
+                        v = max(v, value(state.generateSuccessor(agent_num, action), moves_made + 1))
+                    return v
+
+                # Terminal State
+                else:
+                    return scoreEvaluationFunction(state)
+            # min layer
+            else:
+                """v = 999999
+                v_action = 9999 # SENTINEL
+
+                if len(state.getLegalActions(agent_num)) > 0:
+
+                    for action in state.getLegalActions(agent_num):
+                        if v > self.evaluationFunction(state.generateSuccessor(agent_num, action)):
+                            v = self.evaluationFunction(state.generateSuccessor(agent_num, action))
+                            v_action = action
+                    #print("ghost")
+                    #print(action)
+                    return value(state.generateSuccessor(agent_num, v_action), moves_made + 1)"""
+
+                if len(state.getLegalActions(agent_num)) > 0:
+                    v = 999999
+                    for action in state.getLegalActions(agent_num):
+                        v = min(v, value(state.generateSuccessor(agent_num, action), moves_made + 1))
+                    return v
+
+                else:
+                    #Terminal
+                     return scoreEvaluationFunction(state)
+
+        # for all the moves possible check values pick max
+        val = -999999
+        val_index = 0
+        legal_actions = gameState.getLegalActions()
+
+        if len(legal_actions) > 0:
+            for i, action in enumerate(legal_actions):
+                if value(gameState.generateSuccessor(0, action), 1) > val:
+                      val = value(gameState.generateSuccessor(0, action), 1)
+                      val_index = i
+                #print "current action: " + str(legal_actions[i])
+                #print "current value: " + str(value(gameState.generateSuccessor(0, action), 1))
+                #print "global value: " + str(val)
+
+            #print "FINAL ACTION: " + str(legal_actions[val_index])
+            return legal_actions[val_index]
+        else:
+            #print "TERMINAL STATE"
+            raise AttributeError()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
