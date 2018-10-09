@@ -234,8 +234,57 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           All ghosts should be modeled as choosing uniformly at random from their
           legal moves.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        # number of agents
+        n = gameState.getNumAgents()
+        max_moves = n * self.depth
+
+        def value(state, moves_made):
+            # terminal layer
+            if moves_made == max_moves:
+                return scoreEvaluationFunction(state)
+
+            agent_num = moves_made % n
+
+            # max layer (Pacman)
+            if agent_num == 0:
+                v = -999999
+                if len(state.getLegalActions(agent_num)) > 0:
+                    for action in state.getLegalActions(agent_num):
+                        v = max(v, value(state.generateSuccessor(agent_num, action), moves_made + 1))
+                    return v
+                # Terminal State
+                else:
+                    return scoreEvaluationFunction(state)
+
+            # expectation layer (ghost)
+            else:
+                legal_actions = state.getLegalActions(agent_num)
+                if len(legal_actions) > 0:
+
+                    values = [value(state.generateSuccessor(agent_num, action), moves_made + 1) for action in legal_actions]
+                    sum_vals = sum(values)
+                    return (1.0 / float(len(legal_actions))) * float(sum_vals)
+
+                else:
+                    #Terminal
+                     return scoreEvaluationFunction(state)
+
+        # for all the moves possible check values pick max
+        val = -999999
+        val_index = 0
+        legal_actions = gameState.getLegalActions()
+
+        if len(legal_actions) > 0:
+            for i, action in enumerate(legal_actions):
+                if value(gameState.generateSuccessor(0, action), 1) > val:
+                      val = value(gameState.generateSuccessor(0, action), 1)
+                      val_index = i
+
+            return legal_actions[val_index]
+        else:
+            #print "TERMINAL STATE"
+            raise AttributeError()
 
 def betterEvaluationFunction(currentGameState):
     """
