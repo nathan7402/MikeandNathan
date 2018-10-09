@@ -237,6 +237,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     for action in state.getLegalActions(agent_num):
                         v = max(v, value(state.generateSuccessor(agent_num, action), moves_made + 1,a, B))
                         if v > B:
+                            print "prune"
                             return v
                         a = max(a, v)
                     return v
@@ -251,6 +252,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     for action in state.getLegalActions(agent_num):
                         v = min(v, value(state.generateSuccessor(agent_num, action), moves_made + 1, a, B))
                         if v < a:
+                            print "prune"
                             return v
                         B = min(B, v)
                     return v
