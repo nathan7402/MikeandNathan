@@ -219,8 +219,67 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
           Returns the minimax action using self.depth and self.evaluationFunction
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # number of agents
+        n = gameState.getNumAgents()
+        max_moves = n * self.depth
+
+        def value(state, moves_made, a, B):
+            # terminal layer
+            if moves_made == max_moves:
+                return scoreEvaluationFunction(state)
+
+            agent_num = moves_made % n
+
+            # max layer (i.e. agent number 0)
+            if agent_num == 0:
+                v = -999999
+                if len(state.getLegalActions(agent_num)) > 0:
+                    for action in state.getLegalActions(agent_num):
+                        v = max(v, value(state.generateSuccessor(agent_num, action), moves_made + 1,a, B))
+                        if v > B:
+                            return v
+                        a = max(a, v)
+                    return v
+
+                # Terminal State
+                else:
+                    return scoreEvaluationFunction(state)
+            # min layer
+            else:
+                v = 999999
+                if len(state.getLegalActions(agent_num)) > 0:
+                    for action in state.getLegalActions(agent_num):
+                        v = min(v, value(state.generateSuccessor(agent_num, action), moves_made + 1, a, B))
+                        if v < a:
+                            return v
+                        B = min(B, v)
+                    return v
+
+                else:
+                    #Terminal
+                     return scoreEvaluationFunction(state)
+
+        # for all the moves possible check values pick max
+        val = -999999
+        val_index = 0
+        legal_actions = gameState.getLegalActions()
+
+        if len(legal_actions) > 0:
+            for i, action in enumerate(legal_actions):
+                if value(gameState.generateSuccessor(0, action), 1, -999999, 999999) > val:
+                      val = value(gameState.generateSuccessor(0, action), 1, -999999, 999999)
+                      val_index = i
+                #print "current action: " + str(legal_actions[i])
+                #print "current value: " + str(value(gameState.generateSuccessor(0, action), 1))
+                #print "global value: " + str(val)
+
+            #print "FINAL ACTION: " + str(legal_actions[val_index])
+            return legal_actions[val_index]
+        else:
+            #print "TERMINAL STATE"
+            raise AttributeError()
+
+
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
