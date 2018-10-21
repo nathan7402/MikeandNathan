@@ -33,9 +33,28 @@ def neighbor_bag(bag):
     Return a "neighbor" of the current bag.
     """
     next_bag = list(bag)
-    upper_bound = len(next_bag) - 1 # account for inclusive bounding
+    #print(next_bag)
+    if len(next_bag) == 0:
+        for i in range(20):
+            next_bag.append(random.randint(0,N-1))
+        return next_bag
+    elif(len(next_bag) == 100):
+        raise Exception, "No neighbors left"
+    else:
+        random.shuffle(next_bag)
+        for i in next_bag:
+            val = next_bag.pop()
+            if not(i + 1 in next_bag) and i+1 <100:
+                #next_bag.append(i+1)
+                next_bag.append(i+1)
+                return next_bag
+            elif not(i-1 in next_bag) and i-1 >= 0:
+                next_bag.append(i-1)
+                return next_bag
+            else:
+                next_bag.append(i)
 
-    return next_bag[random.randint(0,upper_bound)] # return random neighbor
+        raise Exception, "ERROR"# return random neighbor
 
 
 def accept_bag(new_val, old_val, T):
@@ -43,16 +62,16 @@ def accept_bag(new_val, old_val, T):
     Return True if we should accept the new bag.  False otherwise.
 
     You may use any acceptance probability metric you chose, but we
-    suggest accepting with probabilities:
+    suggest accepting with probabilities:p
     1                            -->  if new_val > old_val
     exp((new_val - old_val) / T) -->  if old_val >= new_val
     """
-    if T = 0:
+    if T == 0:
         return False
     elif new_val > old_val:
         return True
     else:
-        p_value =  exp((new_val - old_val) / T)
+        p_value =  math.exp((new_val - old_val) / T)
         if random.uniform(0, 1) > p_value:
             return False
         else:
@@ -76,7 +95,7 @@ def simulated_annealing():
     vals = []
     sim_val = 0
     sim_bag = []
-ex
+
     for trial in range(TRIALS):
 
         # Pick a random neighbor
