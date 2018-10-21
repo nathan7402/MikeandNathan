@@ -33,7 +33,9 @@ def neighbor_bag(bag):
     Return a "neighbor" of the current bag.
     """
     next_bag = list(bag)
-    return next_bag  # TODO
+    upper_bound = len(next_bag) - 1 # account for inclusive bounding
+
+    return next_bag[random.randint(0,upper_bound)] # return random neighbor
 
 
 def accept_bag(new_val, old_val, T):
@@ -45,7 +47,16 @@ def accept_bag(new_val, old_val, T):
     1                            -->  if new_val > old_val
     exp((new_val - old_val) / T) -->  if old_val >= new_val
     """
-    return 0  # TODO
+    if T = 0:
+        return False
+    elif new_val > old_val:
+        return True
+    else:
+        p_value =  exp((new_val - old_val) / T)
+        if random.uniform(0, 1) > p_value:
+            return False
+        else:
+            return True
 
 
 def simulated_annealing():
@@ -65,7 +76,7 @@ def simulated_annealing():
     vals = []
     sim_val = 0
     sim_bag = []
-
+ex
     for trial in range(TRIALS):
 
         # Pick a random neighbor
