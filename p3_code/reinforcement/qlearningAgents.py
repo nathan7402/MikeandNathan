@@ -114,9 +114,6 @@ class QLearningAgent(ReinforcementAgent):
         """
         # Pick Action
         legalActions = self.getLegalActions(state)
-        action = None
-
-        ## My code
         action = self.computeActionFromQValues(state)
 
         # I believe this will aoount for the None case
