@@ -51,7 +51,7 @@ class QLearningAgent(ReinforcementAgent):
           Should return 0.0 if we have never seen a state
           or the Q node value otherwise
         """
-        if (state, action) in self.qvalues.sortedKeys():
+        if (state, action) in self.qvalues:
             return self.qvalues[(state, action)]
         else:
             return 0.0
@@ -73,8 +73,9 @@ class QLearningAgent(ReinforcementAgent):
 
         else:
             for action in actions:
-                if self.getQValue(state, action) > best_val:
-                    best_val = self.getQValue(state, action)
+                val = self.getQValue(state, action)
+                if val > best_val:
+                    best_val = val
 
             return best_val
 
@@ -88,10 +89,11 @@ class QLearningAgent(ReinforcementAgent):
         best_val = -999999
 
         for action in self.getLegalActions(state):
-            if self.getQValue(state, action) > best_val:
-                best_val = self.getQValue(state, action)
+            val = self.getQValue(state, action)
+            if val > best_val:
+                best_val = val
                 best_action = [action]
-            elif self.getQValue(state, action) == best_val:
+            elif val == best_val:
                 best_action.append(action)
             else:
                 pass
