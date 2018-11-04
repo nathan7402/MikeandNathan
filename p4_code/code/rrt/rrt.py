@@ -70,10 +70,11 @@ class rrt:
                     if won:
                         break
                 else:
-                    print(wastes)
                     wastes += 1
             else:
                 wastes += 1
+
+
             pygame.display.update()
 
             for e in pygame.event.get():

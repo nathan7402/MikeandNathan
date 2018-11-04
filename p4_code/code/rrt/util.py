@@ -16,12 +16,7 @@ class Util:
         """
         new_x, new_y = new_node
         goal_x, goal_y = goal_node
-        if self.mind > ((sqrt((new_x - goal_x)**2 + (new_y - goal_y)**2))):
-            self.mind = ((sqrt((new_x - goal_x)**2 + (new_y - goal_y)**2)))
-            print(self.mind)
-            if self.mind < 3:
-                return True
-        return  (sqrt((new_x - goal_x)**2 + (new_y - goal_y)**2) < WIN_RADIUS)
+        return (sqrt((new_x - goal_x)**2 + (new_y - goal_y)**2) < WIN_RADIUS)
 
     # Find the nearest node in our list of nodes that is closest to the new_node
     # Hint: If your solution appears to be drawing squiggles instead of the fractal like pattern 
@@ -55,7 +50,7 @@ class Util:
         YDIM - constant representing the height of the game aka grid of (0,YDIM)
         XY_GOAL - node (tuple of integers) representing the location of the goal
         """
-        if random.random() < 0.05:
+        if random.random() <= 0.05:
             #print(XY_GOAL)
             return XY_GOAL
         else:
@@ -72,11 +67,15 @@ class Util:
         """
         x1, y1 = current_node
         x2, y2 = new_point
-        angle = atan2(y2-y1, x2-x1)
-        #print("CURRENT NODE" + str(current_node))
-        #print("NEW POINT" + str(new_point))
-        #print(x1 + delta * sin(angle), y1 + delta * cos(angle))
-        return(x1 + delta * cos(angle), y1 + delta * sin(angle))
+
+        if(self.winCondition(current_node, new_point, delta)):
+            return new_point
+        else:
+            angle = atan2(y2-y1, x2-x1)
+            #print("CURRENT NODE" + str(current_node))
+            #print("NEW POINT" + str(new_point))
+            #print(x1 + delta * sin(angle), y1 + delta * cos(angle))
+            return(x1 + delta * cos(angle), y1 + delta * sin(angle))
 
     # iterate throught the obstacles and check that our point is not in any of them
     def isCollisionFree(self,obstacles,point,obs_line_width):
