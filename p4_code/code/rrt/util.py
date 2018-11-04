@@ -67,6 +67,7 @@ class Util:
         x1, y1 = current_node
         x2, y2 = new_point
 
+        # Prevent delta issues
         if(self.winCondition(current_node, new_point, delta)):
             return new_point
         else:
@@ -85,9 +86,17 @@ class Util:
         obs_line_width - the length of the line segments that define each obstacle's
             boundary
         """
+
+        ## WHAT WE NEED TO DO IS USE DOT PRODUCT TO FIND PERPENDICULAR DISTANCE
+        # BETWEEN POINT AND LINES IN OBSTACLES THEN TEST IN WIN CONDITION IF IT IS LESS
+        # RHAN obs_line_width / 2
+        for key, items in obstacles.items():
+            for item in items[0]:
+                if (self.winCondition(item, point, obs_line_width/2)):
+                    return False
+
         return True
-        for key, item in obstacles.items():
-            print(item)
+
 
     ################################################
     #  Any other helper functions you need go here #
