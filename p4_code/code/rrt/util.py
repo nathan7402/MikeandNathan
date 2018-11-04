@@ -50,12 +50,11 @@ class Util:
         YDIM - constant representing the height of the game aka grid of (0,YDIM)
         XY_GOAL - node (tuple of integers) representing the location of the goal
         """
-        if random.random() <= 0.05:
+        if random.random() < 0.05:
             #print(XY_GOAL)
             return XY_GOAL
         else:
-            point = (random.randint(0,XDIM), random.randint(0,YDIM))
-            return point
+            return (random.random() * XDIM, random.random() * YDIM)
 
     # Extend (by at most distance delta) in the direction of the new_point and place
     # a new node there
