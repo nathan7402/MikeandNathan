@@ -97,6 +97,7 @@ class Util:
             new_y = pointy - items[0][1]
             vx, vy = (items[1][0] - items[0][0], items[1][1] - items[0][1])
 
+            -vx/vy
             # derived from line vector equations
             if vx == 0:
                 # backwards
@@ -136,9 +137,9 @@ class Util:
                         t = (vx / vy * new_x - new_y) / ((1 + (vx / vy) ** 2) * vy)
                         closest_point = (items[0][0] + vx * t, items[0][1] + vy * t)
 
-            if (self.winCondition(closest_point,point, obs_line_width/2)):
+            if (self.winCondition(closest_point,point, obs_line_width/2.0)):
                 print(False)
-                #print(point)
+                print(point)
                 print(closest_point)
                 #print(vy)
                 #print(vx)
