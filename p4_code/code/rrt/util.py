@@ -88,27 +88,28 @@ class Util:
         """
 
         for key, items in obstacles.items():
-            # define obstacle as vector
-            obs_p1 = items[0][0], items[0][1]
-            obs_p2 = items[1][0], items[1][1]
-            obs_vx, obs_vy = vect_sub(obs_p2, obs_p1)
+            for i in range(len(items) - 1):
+                # define obstacle as vector
+                obs_p1 = items[i][0], items[i][1]
+                obs_p2 = items[i+1][0], items[i+1][1]
+                obs_vx, obs_vy = vect_sub(obs_p2, obs_p1)
 
-            # create perpendicular vector to define corners of rectangle
-            theta = atan2(- obs_vx, obs_vy)
-            perp_vect = (0.5 * (obs_line_width) * cos(theta), 0.5 * (obs_line_width) * sin(theta))
+                # create perpendicular vector to define corners of rectangle
+                theta = atan2(- obs_vx, obs_vy)
+                perp_vect = (0.5 * (obs_line_width) * cos(theta), 0.5 * (obs_line_width) * sin(theta))
 
-            # define corners of rectangle and use vector projections to
-            # determine if point in rectangle
-            a = vect_add(obs_p1, perp_vect)
-            b = vect_sub(obs_p1, perp_vect)
-            c = vect_add(obs_p2, perp_vect)
-            ab = vect_sub(b, a)
-            bc = vect_sub(c, b)
-            ap = vect_sub(point, a)
-            bp = vect_sub(point, b)
+                # define corners of rectangle and use vector projections to
+                # determine if point in rectangle
+                a = vect_add(obs_p1, perp_vect)
+                b = vect_sub(obs_p1, perp_vect)
+                c = vect_add(obs_p2, perp_vect)
+                ab = vect_sub(b, a)
+                bc = vect_sub(c, b)
+                ap = vect_sub(point, a)
+                bp = vect_sub(point, b)
 
-            if (0 <= dot(ab, ap) <= dot(ab,ab)) and (0 <= dot(bc, bp) <= dot(bc,bc)):
-                return False
+                if (0 <= dot(ab, ap) <= dot(ab,ab)) and (0 <= dot(bc, bp) <= dot(bc,bc)):
+                    return False
 
         return True
 
