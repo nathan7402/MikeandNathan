@@ -150,8 +150,8 @@ class ExactInference(InferenceModule):
 
         "*** YOUR CODE HERE ***"
         # SLIDE 33
-        print("pacman Positiion" + str(noisyDistance))
-        print("emissionModel" + str(emissionModel))
+        #print("pacman Positiion" + str(noisyDistance))
+        #print("emissionModel" + str(emissionModel))
         #util.raiseNotDefined()
 
         allPossible = util.Counter()
