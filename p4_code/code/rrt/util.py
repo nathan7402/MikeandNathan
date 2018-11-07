@@ -19,7 +19,7 @@ class Util:
         return (sqrt((new_x - goal_x)**2 + (new_y - goal_y)**2) < WIN_RADIUS)
 
     # Find the nearest node in our list of nodes that is closest to the new_node
-    # Hint: If your solution appears to be drawing squiggles instead of the fractal like pattern 
+    # Hint: If your solution appears to be drawing squiggles instead of the fractal like pattern
     #       of striaght lines you are probably extending from the last point not the closest point!
     def nearestNode(self,nodes,new_node):
         """
@@ -87,68 +87,46 @@ class Util:
             boundary
         """
 
-        ## WHAT WE NEED TO DO IS USE DOT PRODUCT TO FIND PERPENDICULAR DISTANCE
-        # BETWEEN POINT AND LINES IN OBSTACLES THEN TEST IN WIN CONDITION IF IT IS LESS
-        # RHAN obs_line_width / 2
-        pointx, pointy = point
-
         for key, items in obstacles.items():
-            new_x = pointx - items[0][0]
-            new_y = pointy - items[0][1]
-            vx, vy = (items[1][0] - items[0][0], items[1][1] - items[0][1])
+            # define obstacle as vector
+            obs_p1 = items[0][0], items[0][1]
+            obs_p2 = items[1][0], items[1][1]
+            obs_vx, obs_vy = vect_sub(obs_p2, obs_p1)
 
-            -vx/vy
-            # derived from line vector equations
-            if vx == 0:
-                # backwards
-                if(pointy < items[0][1] and pointy < items[1][1]):
-                    mergey = min(items[0][1], items[1][1])
-                elif (pointy > items[0][1] and pointy > items[1][1]):
-                    mergey = max(items[0][1], items[1][1])
-                else:
-                    mergey = pointy
+            # create perpendicular vector to define corners of rectangle
+            theta = atan2(- obs_vx, obs_vy)
+            perp_vect = (0.5 * (obs_line_width) * cos(theta), 0.5 * (obs_line_width) * sin(theta))
 
-                closest_point = (items[0][0], mergey)
-            elif vy == 0:
-                # backwards
-                if (pointx < items[0][0] and pointx < items[1][0]):
-                    mergex = min(items[0][0], items[1][0])
-                elif (pointx > items[0][0] and pointx > items[1][0]):
-                    mergex = max(items[0][0], items[1][0])
-                else:
-                    mergex = pointy
-                closest_point = (mergex, items[0][1])
-            else:
-                # diagonal
-                if(vy/vx < 0):
-                    if (pointy > max(items[0][1], items[1][1]) and pointx < min(items[0][0],items[1][0])):
-                        closest_point = max(items[0][1], items[1][1]), min(items[0][0],items[1][0])
-                    elif (pointy < min(items[0][1], items[1][1]) and pointx > max(items[0][0],items[1][0])):
-                        closest_point = min(items[0][1], items[1][1]), max(items[0][0],items[1][0])
-                    else:
-                        t = (vx / vy * new_x - new_y) / ((1 + (vx / vy) ** 2) * vy)
-                        closest_point = (items[0][0] + vx * t, items[0][1] + vy * t)
-                else:
-                    if (pointy > max(items[0][1], items[1][1]) and pointx > max(items[0][0],items[1][0])):
-                        closest_point = max(items[0][1], items[1][1]), max(items[0][0],items[1][0])
-                    elif (pointy < min(items[0][1], items[1][1]) and pointx < min(items[0][0],items[1][0])):
-                        closest_point = min(items[0][1], items[1][1]), min(items[0][0],items[1][0])
-                    else:
-                        t = (vx / vy * new_x - new_y) / ((1 + (vx / vy) ** 2) * vy)
-                        closest_point = (items[0][0] + vx * t, items[0][1] + vy * t)
+            # define corners of rectangle and use vector projections to
+            # determine if point in rectangle
+            a = vect_add(obs_p1, perp_vect)
+            b = vect_sub(obs_p1, perp_vect)
+            c = vect_add(obs_p2, perp_vect)
+            ab = vect_sub(b, a)
+            bc = vect_sub(c, b)
+            ap = vect_sub(point, a)
+            bp = vect_sub(point, b)
 
-            if (self.winCondition(closest_point,point, obs_line_width/2.0)):
-                print(False)
-                print(point)
-                print(closest_point)
-                #print(vy)
-                #print(vx)
-                print(obstacles)
+            if (0 <= dot(ab, ap) <= dot(ab,ab)) and (0 <= dot(bc, bp) <= dot(bc,bc)):
                 return False
 
         return True
 
-
     ################################################
     #  Any other helper functions you need go here #
     ################################################
+
+def vect_add(a,b):
+    ax, ay = a
+    bx, by = b
+    return (ax + bx, ay + by)
+
+def vect_sub(a,b):
+    ax, ay = a
+    bx, by = b
+    return (ax - bx, ay - by)
+
+def dot(a,b):
+    ax, ay = a
+    bx, by = b
+    return (ax * bx) + (ay * by)

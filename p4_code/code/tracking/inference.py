@@ -149,16 +149,26 @@ class ExactInference(InferenceModule):
         pacmanPosition = gameState.getPacmanPosition()
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # SLIDE 33
+        print("pacman Positiion" + str(noisyDistance))
+        print("emissionModel" + str(emissionModel))
+        #util.raiseNotDefined()
 
-        # Replace this code with a correct observation update
-        # Be sure to handle the "jail" edge case where the ghost is eaten
-        # and noisyDistance is None
         allPossible = util.Counter()
-        for p in self.legalPositions:
-            trueDistance = util.manhattanDistance(p, pacmanPosition)
-            if emissionModel[trueDistance] > 0:
-                allPossible[p] = 1.0
+        if(noisyDistance == None):
+            ghostPosition = self.getJailPosition()
+            allPossible[ghostPosition] = 1.0
+        else:
+            # Replace this code with a correct observation update
+            # Be sure to handle the "jail" edge case where the ghost is eaten
+            # and noisyDistance is None
+            for p in self.legalPositions:
+                trueDistance = util.manhattanDistance(p, pacmanPosition)
+                if emissionModel[trueDistance] > 0:
+                    allPossible[p] = emissionModel[trueDistance] * self.beliefs[p]
+                else:
+                    allPossible[p] = 0
+
 
         "*** END YOUR CODE HERE ***"
 
