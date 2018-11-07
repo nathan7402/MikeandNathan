@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -156,11 +156,35 @@ class GreedyBustersAgent(BustersAgent):
              indices into this list should be 1 less than indices into the
              gameState.getLivingGhosts() list.
         """
+        # borrowed from https://stackoverflow.com/questions/268272/getting-key-with-maximum-value-in-dictionary
+        def keywithmaxval(dict):
+            v = list(dict.values())
+            k = list(dict.keys())
+            return k[v.index(max(v))]
+
+        def keywithminval(dict):
+            v = list(dict.values())
+            k = list(dict.keys())
+            return k[v.index(min(v))]
+
         pacmanPosition = gameState.getPacmanPosition()
         legal = [a for a in gameState.getLegalPacmanActions()]
         livingGhosts = gameState.getLivingGhosts()
         livingGhostPositionDistributions = \
             [beliefs for i, beliefs in enumerate(self.ghostBeliefs)
              if livingGhosts[i+1]]
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        most_likely_positions = {}
+        for i in range(len(livingGhostPositionDistributions)):
+            most_likely_positions[i] = keywithmaxval(livingGhostPositionDistributions[i])
+
+        closest_ghost = keywithmaxval(most_likely_positions)
+        closest_pos = most_likely_positions[closest_ghost]
+
+        distances = {}
+
+        for a in legal:
+            succPos = Actions.getSuccessor(pacmanPosition, a)
+            distances[a] = self.distancer.getDistance(succPos, closest_pos)
+
+        return keywithminval(distances)

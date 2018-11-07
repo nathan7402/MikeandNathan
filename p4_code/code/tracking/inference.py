@@ -148,12 +148,6 @@ class ExactInference(InferenceModule):
         emissionModel = busters.getObservationDistribution(noisyDistance)
         pacmanPosition = gameState.getPacmanPosition()
 
-        "*** YOUR CODE HERE ***"
-        # SLIDE 33
-        print("pacman Positiion" + str(noisyDistance))
-        print("emissionModel" + str(emissionModel))
-        #util.raiseNotDefined()
-
         allPossible = util.Counter()
         if(noisyDistance == None):
             ghostPosition = self.getJailPosition()
@@ -168,9 +162,6 @@ class ExactInference(InferenceModule):
                     allPossible[p] = emissionModel[trueDistance] * self.beliefs[p]
                 else:
                     allPossible[p] = 0
-
-
-        "*** END YOUR CODE HERE ***"
 
         allPossible.normalize()
         self.beliefs = allPossible
