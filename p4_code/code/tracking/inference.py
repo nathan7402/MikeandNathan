@@ -279,9 +279,9 @@ class ParticleFilter(InferenceModule):
                 self.particles.append(random.choice(self.legalPositions))
 
         else:
-            multiplier = self.numParticles / num_pos
+            multiplier = self.numParticles // num_pos
             self.particles = self.legalPositions * multiplier
-            for i in range(self.numParticles):
+            while len(self.particles) < self.numParticles:
                 self.particles.append(random.choice(self.legalPositions))
 
     def observe(self, observation, gameState):
@@ -336,7 +336,6 @@ class ParticleFilter(InferenceModule):
         # initalize uniformly if all weights are 0
         if dist.totalCount() == 0:
             self.initializeUniformly
-            print(self.particles)
 
         # otherwise resample particles from weighted dist
         else:
