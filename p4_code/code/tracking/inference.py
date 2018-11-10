@@ -361,7 +361,15 @@ class ParticleFilter(InferenceModule):
         a belief distribution.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        particle_list = []
+
+        for particle in self.particles:
+            curPosDistribution = self.getPositionDistribution(self.setGhostPosition(gameState, particle))
+            particle_list.append(util.sample(curPosDistribution))
+
+        self.particles = particle_list
+
+        self.beliefs = self.getBeliefDistribution()
 
     def getBeliefDistribution(self):
         """
@@ -558,7 +566,6 @@ class JointParticleFilter:
             # now loop through and update each entry in newParticle...
 
             "*** YOUR CODE HERE ***"
-
             "*** END YOUR CODE HERE ***"
             newParticles.append(tuple(newParticle))
         self.particles = newParticles
