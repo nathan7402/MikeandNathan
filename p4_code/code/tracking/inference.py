@@ -280,6 +280,7 @@ class ParticleFilter(InferenceModule):
         weight with each position) is incorrect and may produce errors.
         """
         "*** YOUR CODE HERE ***"
+        self.
 
     def observe(self, observation, gameState):
         """
