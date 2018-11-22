@@ -48,8 +48,15 @@ class KMeansClassifier(object):
 
         Hints: Look into np.linalg.norm and np.subtract
         """
-        self.clusters[-1] = self.points
-        
+        for i in range(len(self.points)):
+            pt = self.points[i]
+            distances = []
+            for j in range(self.K):
+                v = np.subtract(pt, self.centers[j])
+                distances.append(np.linalg.norm(v))
+            min_k = np.argmin(distances)
+            self.clusters[min_k].append(pt)
+
     def update_centers(self):
         """
         TODO
@@ -57,7 +64,8 @@ class KMeansClassifier(object):
         Update the cluster centers based on the mean of all
         points assigned to it.
         """
-        pass
+        for i in range(self.K):
+            self.centers[i] = np.ndarray.tolist(np.mean(self.clusters[i], axis=0))
 
     def error(self):
         """
@@ -69,7 +77,14 @@ class KMeansClassifier(object):
         Hints: Like assign_cluster, look into np.linalg.norm and np.subtract.
                Make sure to square each distance!
         """
-        return 0.0
+        total = 0
+        for i in range(self.K):
+            center = self.centers[i]
+            for pt in self.clusters[i]:
+                v = np.subtract(pt, center)
+                total += np.linalg.norm(v) ** 2
+
+        return total
 
 
 if __name__ == '__main__':
