@@ -1,5 +1,13 @@
 from math import log
 
+# borrowed from https://stackoverflow.com/questions/16945518/finding-the-index-of-the-value-which-is-the-min-or-max-in-python
+def argmin(iterable):
+    return min(enumerate(iterable), key=lambda x: x[1])[0]
+
+def argmax(iterable):
+    return max(enumerate(iterable), key=lambda x: x[1])[0]
+
+
 class TextClassifier:
     """
     In this question, you will implement a classifier that predicts
@@ -21,7 +29,7 @@ class TextClassifier:
 
         Hint: Think about likelihood here as count probabilities.
         """
-        return [0.1, 0.8, 0.2, 0.0]
+        return [0.4, 0.2, 0.1, 0.3]
 
     def q2(self):
         """
@@ -38,7 +46,7 @@ class TextClassifier:
         Hint: Should be the same as q1, except you add 2 "fake" observations
         per side.
         """
-        return [0.1, 0.8, 0.2, 0.0]
+        return [0.3571, 0.2143, 0.1429, 0.2857]
 
     def q3(self, counts=[1, 1, 3, 8]):
         """
@@ -63,7 +71,8 @@ class TextClassifier:
         Hint: This should be very similar to the previous problem.  Think about
         counts as a more compact representation of a string of observations.
         """
-        return [0.1, 0.8, 0.2, 0.0]
+        total = float(sum(counts))
+        return [count / total for count in counts]
 
     def q4(self, infile):
         """
@@ -96,8 +105,35 @@ class TextClassifier:
         self.dict = {}
         self.nrated = [0] * 5
 
+        f = open(infile)
+        line = f.readline()
+        inc = 0
+        while line != "":
+            words = line.split()
+            rating = int(words[0])
+            self.nrated[rating] += 1
+            for i in range(1,len(words)):
+                if words[i] not in self.dict:
+                    self.dict[words[i]] = inc
+                    inc += 1
+            line = f.readline()
+
+        f.close()
+
         # Fill counts
         self.counts = [[0] * len(self.dict) for _ in range(5)]
+
+        f = open(infile)
+        line = f.readline()
+        while line != "":
+            words = line.split()
+            rating = int(words[0])
+            for i in range(1,len(words)):
+                index = self.dict[words[i]]
+                self.counts[rating][index] += 1
+            line = f.readline()
+
+        f.close()
 
     def q5(self, alpha=1):
         """
@@ -115,6 +151,12 @@ class TextClassifier:
         """
         self.F = [[0] * len(self.dict) for _ in range(5)]
 
+        for rating in range(5):
+            for index in self.dict.values():
+                self.F[rating][index] = -log(float(alpha + self.counts[rating][index]) / float(sum(self.counts[rating]) + (alpha * len(self.counts[rating]))))
+
+        return self.F
+
     def q6(self, infile):
         """
         Test time! The infile has the same format as it did before. For each review,
@@ -122,7 +164,42 @@ class TextClassifier:
         Are there any factors that won't affect your prediction?
         You'll report both the list of predicted ratings in order and the accuracy.
         """
-        return ([2], 0.000000000000182)
+
+        f = open(infile)
+        line = f.readline()
+        most_likely_ratings = []
+        errors = 0
+        reviews = 0
+
+        # for every review
+        while line != "":
+            # reinitialize joint probs each loop
+            joint_probs = [0 for _ in range(5)]
+
+            words = line.split()
+            actual_rating = int(words[0])
+
+            # if word is in dictionary, update joint probs; ignore otherwise
+            for i in range(1,len(words)):
+                if words[i] in self.dict:
+                    index = self.dict[words[i]]
+                else:
+                    continue
+                for rating in range(5):
+                    joint_probs[rating] += self.F[rating][index]
+
+            # get predicted rating, track errors and total lines read
+            predicted_rating = argmin(joint_probs)
+            if actual_rating != predicted_rating:
+                errors += 1
+            reviews += 1
+
+            # record most likely rating for this review
+            most_likely_ratings.append(predicted_rating)
+
+            line = f.readline()
+
+        return (most_likely_ratings, 1- (errors / float(reviews)))
 
     def q7(self, infile):
         """
@@ -136,7 +213,18 @@ class TextClassifier:
         Find and return a good value of alpha (hint: you will want to call q5 and q6).
         What happens when alpha = 0?
         """
-        return 0
+        accuracies = [0]
+
+        # test all alpha up to 10
+        for alpha in range(1,10):
+            self.q5(alpha)
+            _, accuracy = self.q6(infile)
+            accuracies.append(accuracy)
+
+        # correct argmax for indexing from 1
+        best_alpha = argmax(accuracies) + 1
+
+        return best_alpha
 
     """
     You did it! If you're curious, the dataset came from (Socher 2013), which describes
